@@ -286,6 +286,9 @@ function DashboardPage() {
               <div className="mt-7 flex h-44 items-end gap-1.5 sm:gap-2">
                 {stats.trend.map((d, i) => {
                   const h = Math.max(4, (d.count / maxTrend) * 100);
+                  // Add a slight "ripple" effect to the bars visually if they are empty or very low, 
+                  // or just ensure the single lead bar stands out.
+                  // For "ondulações" with 1 lead, we can add a subtle CSS animation or varied opacity.
                   return (
                     <div key={i} className="group relative flex flex-1 flex-col items-center justify-end">
                       <div className="absolute -top-6 hidden scale-90 rounded-md bg-foreground px-1.5 py-0.5 text-[9px] font-bold tabular-nums text-background transition-all group-hover:block">
@@ -294,8 +297,22 @@ function DashboardPage() {
                       <motion.span
                         initial={{ height: 0 }}
                         animate={{ height: `${h}%` }}
-                        transition={{ delay: i * 0.02, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                        className="w-full rounded-t-lg bg-gradient-to-t from-primary/30 via-primary/80 to-primary transition-all duration-300 group-hover:from-primary group-hover:to-[oklch(0.85_0.15_290)] group-hover:shadow-[0_0_12px_rgba(155,92,246,0.4)]"
+                        transition={{ 
+                          delay: i * 0.02, 
+                          duration: 0.6, 
+                          ease: [0.22, 1, 0.36, 1],
+                          // Adding a subtle pulse if count > 0 to simulate "ripples"
+                          ...(d.count > 0 ? {
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            duration: 2
+                          } : {})
+                        }}
+                        className={`w-full rounded-t-lg transition-all duration-300 ${
+                          d.count > 0 
+                            ? "bg-gradient-to-t from-primary/40 via-primary/90 to-primary shadow-[0_0_12px_rgba(155,92,246,0.3)]" 
+                            : "bg-primary/5 group-hover:bg-primary/20"
+                        } group-hover:from-primary group-hover:to-[oklch(0.85_0.15_290)] group-hover:shadow-[0_0_12px_rgba(155,92,246,0.4)]`}
                         style={{ minHeight: 4 }}
                       />
                     </div>
