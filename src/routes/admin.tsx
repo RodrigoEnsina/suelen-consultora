@@ -12,6 +12,7 @@ import {
   Settings,
   BarChart3,
   Target,
+  Contrast,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -63,6 +64,26 @@ function AdminLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [highContrast, setHighContrast] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("high-contrast") === "true";
+    if (saved) {
+      setHighContrast(true);
+      document.documentElement.classList.add("high-contrast");
+    }
+  }, []);
+
+  const toggleHighContrast = () => {
+    const newVal = !highContrast;
+    setHighContrast(newVal);
+    localStorage.setItem("high-contrast", String(newVal));
+    if (newVal) {
+      document.documentElement.classList.add("high-contrast");
+    } else {
+      document.documentElement.classList.remove("high-contrast");
+    }
+  };
   const leadsEnabled = !loading && !!user;
   const { leads } = useAdminLeads({ enabled: leadsEnabled });
   useAdminLeadsRealtime(leadsEnabled);
@@ -213,10 +234,24 @@ function AdminLayout() {
             ))}
           </nav>
 
-          {/* Footer / user */}
+          {/* Footer / user / tools */}
           <div className="border-t border-sidebar-border p-3 space-y-2">
-            <div className="flex justify-center md:justify-start">
-              <AudioAlert />
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex justify-center md:justify-start">
+                <AudioAlert />
+              </div>
+              <button
+                onClick={toggleHighContrast}
+                className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all ${
+                  highContrast 
+                    ? "bg-primary text-primary-foreground shadow-glow" 
+                    : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                }`}
+                aria-label="Alternar alto contraste"
+                title="Alto Contraste"
+              >
+                <Contrast className="h-4 w-4" />
+              </button>
             </div>
             {!collapsed ? (
               <div className="flex items-center gap-2.5 rounded-xl bg-sidebar-accent/40 p-2.5">
