@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAdminLeads, useAdminLeadsRealtime } from "@/hooks/useAdminLeads";
 import logo from "@/assets/nexus-logo.png";
 import { toast } from "sonner";
+import { AudioAlert } from "@/components/admin/AudioAlert";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -213,7 +214,10 @@ function AdminLayout() {
           </nav>
 
           {/* Footer / user */}
-          <div className="border-t border-sidebar-border p-3">
+          <div className="border-t border-sidebar-border p-3 space-y-2">
+            <div className="flex justify-center md:justify-start">
+              <AudioAlert />
+            </div>
             {!collapsed ? (
               <div className="flex items-center gap-2.5 rounded-xl bg-sidebar-accent/40 p-2.5">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-xs font-bold text-primary-foreground">

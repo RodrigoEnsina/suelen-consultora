@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Lead } from "@/lib/kanban";
 import { fetchAdminLeads } from "@/lib/leads";
+import { audioState } from "@/components/admin/AudioAlert";
 
 export const ADMIN_LEADS_QUERY_KEY = ["admin", "leads"] as const;
 export { fetchAdminLeads };
@@ -73,16 +74,23 @@ export function useAdminLeadsRealtime(enabled: boolean) {
 
     const playNotification = () => {
       try {
-        const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-        audio.volume = 0.5;
-        audio.play().catch(err => {
-          console.warn("[audio] notification blocked by browser", err);
-          // Fallback visual via toast quando o áudio é bloqueado
-          toast.warning("Novo Lead (Som Bloqueado)", {
-            description: "Um novo lead chegou, mas seu navegador bloqueou o alerta sonoro. Clique na página para permitir áudio.",
-            duration: 10000,
+        if (audioState.unlocked && audioState.primedAudio) {
+          audioState.primedAudio.currentTime = 0;
+          audioState.primedAudio.play().catch(err => {
+            console.warn("[audio] play failed even after unlock", err);
           });
-        });
+        } else {
+          // Fallback if not unlocked yet
+          const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+          audio.volume = 0.5;
+          audio.play().catch(err => {
+            console.warn("[audio] notification blocked by browser", err);
+            toast.warning("Novo Lead (Som Bloqueado)", {
+              description: "Clique no ícone de som no topo para ativar os alertas.",
+              duration: 10000,
+            });
+          });
+        }
       } catch (err) {
         console.warn("[audio] could not play notification", err);
       }
