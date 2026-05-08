@@ -67,9 +67,16 @@ function AdminLayout() {
   const [highContrast, setHighContrast] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("high-contrast") === "true";
-    if (saved) {
-      setHighContrast(true);
+    const saved = localStorage.getItem("high-contrast");
+    const prefersHighContrast = window.matchMedia("(prefers-contrast: more)").matches;
+    
+    // Prioritize user's saved preference, fallback to device preference
+    const isHighContrast = saved !== null 
+      ? saved === "true" 
+      : prefersHighContrast;
+
+    setHighContrast(isHighContrast);
+    if (isHighContrast) {
       document.documentElement.classList.add("high-contrast");
     }
   }, []);
@@ -84,6 +91,26 @@ function AdminLayout() {
       document.documentElement.classList.remove("high-contrast");
     }
   };
+
+  // Listen for device preference changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-contrast: more)");
+    const handleChange = (e: MediaQueryListEvent) => {
+      // Only auto-switch if the user hasn't set a manual preference
+      const saved = localStorage.getItem("high-contrast");
+      if (saved === null) {
+        setHighContrast(e.matches);
+        if (e.matches) {
+          document.documentElement.classList.add("high-contrast");
+        } else {
+          document.documentElement.classList.remove("high-contrast");
+        }
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
   const leadsEnabled = !loading && !!user;
   const { leads } = useAdminLeads({ enabled: leadsEnabled });
   useAdminLeadsRealtime(leadsEnabled);
