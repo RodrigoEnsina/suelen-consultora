@@ -226,7 +226,7 @@ function DashboardPage() {
                   />
                   <div className="relative flex items-start justify-between">
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">
                         {c.label}
                       </p>
                       <p className="mt-1 font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
