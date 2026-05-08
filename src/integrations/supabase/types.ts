@@ -281,7 +281,7 @@ export type Database = {
     Functions: {
       create_lead: {
         Args: {
-          _cidade: string
+          _cidade?: string
           _email: string
           _nome: string
           _origem?: string
