@@ -105,9 +105,9 @@ function AdminAnalyticsPage() {
                 const widthPct = funnel.views[1] ? Math.max(8, Math.round((views / funnel.views[1]) * 100)) : 8;
                 return (
                   <div key={s.n}>
-                    <div className="mb-1.5 flex justify-between text-[11px] leading-tight">
-                      <span className="font-bold tracking-tight text-foreground/90">Etapa {s.n} · {s.label}</span>
-                      <span className="font-semibold text-muted-foreground">{views} entradas · {completes} concluíram ({rate}%)</span>
+                    <div className="mb-1.5 flex justify-between items-baseline">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">Etapa {s.n} · {s.label}</span>
+                      <span className="text-[10px] font-medium tabular-nums text-muted-foreground">{views} entradas · {completes} concluíram ({rate}%)</span>
                     </div>
                     <div className="h-7 overflow-hidden rounded-lg bg-muted">
                       <div className="h-full bg-gradient-brand" style={{ width: `${widthPct}%` }} />
@@ -115,8 +115,8 @@ function AdminAnalyticsPage() {
                   </div>
                 );
               })}
-              <div className="mt-4 rounded-xl bg-muted/50 p-3 text-[11px] font-semibold text-foreground/80 ring-1 ring-border/20">
-                <strong className="font-bold text-foreground">Conversão geral:</strong> {pct(k.cotacoes, k.uniqueSessions)}% (cotações finalizadas / visitantes)
+              <div className="mt-4 rounded-xl bg-muted/50 p-3 text-[11px] font-medium text-muted-foreground ring-1 ring-border/20">
+                <span className="font-bold text-foreground">Conversão geral:</span> {pct(k.cotacoes, k.uniqueSessions)}% (cotações finalizadas / visitantes)
               </div>
             </div>
           </div>
