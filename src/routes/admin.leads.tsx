@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, RefreshCw, Download, FileText, FileSpreadsheet, Filter, Loader2, Trash2, Phone, Mail, Car, Eye, ArrowUpDown, ArrowUp, ArrowDown, Calendar as CalendarIcon, X } from "lucide-react";
+import { Search, RefreshCw, Download, FileText, FileSpreadsheet, Filter, Loader2, Trash2, Phone, Mail, Car, Eye, ArrowUpDown, ArrowUp, ArrowDown, Calendar as CalendarIcon, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -267,6 +267,8 @@ function LeadsPage() {
   const [selectedExportColumns, setSelectedExportColumns] = useState<ExportColumnId[]>(
     EXPORT_COLUMNS.map((c) => c.id),
   );
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -278,8 +280,10 @@ function LeadsPage() {
     return Array.from(set).sort();
   }, [leads]);
 
-  const fetchLeads = (showToast = false) =>
+  const fetchLeads = (showToast = false) => {
+    setPage(1);
     refresh({ showToast, successMessage: "Leads atualizados", errorMessage: "Erro ao carregar leads" });
+  };
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -311,6 +315,17 @@ function LeadsPage() {
       return 0;
     });
   }, [leads, search, statusFilter, originFilter, dateRange, sortKey, sortDir]);
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const pagedLeads = useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    return filtered.slice(start, start + itemsPerPage);
+  }, [filtered, page]);
+
+  const handlePageChange = (p: number) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleStatusChange = async (id: string, status: LeadStatus) => {
     const previous = leads;
@@ -501,7 +516,10 @@ function LeadsPage() {
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Buscar por nome, WhatsApp, e-mail, veículo…"
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
@@ -512,7 +530,10 @@ function LeadsPage() {
               <Filter className="ml-1.5 h-3.5 w-3.5 text-muted-foreground" />
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as LeadStatus | "all")}
+                onChange={(e) => {
+                  setStatusFilter(e.target.value as LeadStatus | "all");
+                  setPage(1);
+                }}
                 className="bg-transparent pr-2 text-xs font-medium outline-none"
               >
                 <option value="all">Todos os status</option>
@@ -527,7 +548,10 @@ function LeadsPage() {
             <div className="glass flex items-center gap-1.5 rounded-full px-2 py-1.5">
               <select
                 value={originFilter}
-                onChange={(e) => setOriginFilter(e.target.value)}
+                onChange={(e) => {
+                  setOriginFilter(e.target.value);
+                  setPage(1);
+                }}
                 className="bg-transparent px-2 text-xs font-medium outline-none"
               >
                 <option value="all">Todas as origens</option>
@@ -558,6 +582,7 @@ function LeadsPage() {
                       onClick={(e) => {
                         e.stopPropagation();
                         setDateRange({ from: undefined, to: undefined });
+                        setPage(1);
                       }}
                     />
                   )}
@@ -569,7 +594,10 @@ function LeadsPage() {
                   mode="range"
                   defaultMonth={dateRange.from}
                   selected={{ from: dateRange.from, to: dateRange.to }}
-                  onSelect={(range: any) => setDateRange({ from: range?.from, to: range?.to })}
+                  onSelect={(range: any) => {
+                    setDateRange({ from: range?.from, to: range?.to });
+                    setPage(1);
+                  }}
                   numberOfMonths={2}
                   locale={ptBR}
                 />
@@ -621,7 +649,7 @@ function LeadsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map((l) => (
+                    {pagedLeads.map((l) => (
                       <tr key={l.id} className="border-b border-border/40 transition-colors hover:bg-accent/30">
                         <td className="px-4 py-3">
                           <p className="font-semibold">{l.nome}</p>
@@ -682,7 +710,7 @@ function LeadsPage() {
 
             {/* Mobile cards */}
             <div className="flex flex-col gap-3 md:hidden">
-              {filtered.map((l) => (
+              {pagedLeads.map((l) => (
                 <button
                   key={l.id}
                   onClick={() => setSelected(l)}
@@ -711,6 +739,52 @@ function LeadsPage() {
                 </button>
               ))}
             </div>
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 rounded-full"
+                  disabled={page === 1}
+                  onClick={() => handlePageChange(page - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center gap-1.5">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum = page;
+                    if (page <= 3) pageNum = i + 1;
+                    else if (page >= totalPages - 2) pageNum = totalPages - 4 + i;
+                    else pageNum = page - 2 + i;
+
+                    if (pageNum < 1 || pageNum > totalPages) return null;
+
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={page === pageNum ? "default" : "outline"}
+                        size="sm"
+                        className={`h-9 w-9 rounded-full font-bold transition-all ${
+                          page === pageNum ? "shadow-glow scale-110" : "hover:bg-primary/10"
+                        }`}
+                        onClick={() => handlePageChange(pageNum)}
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 rounded-full"
+                  disabled={page === totalPages}
+                  onClick={() => handlePageChange(page + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </>
         )}
       </div>
