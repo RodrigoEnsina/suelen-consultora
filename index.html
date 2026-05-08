@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus CRM</title>
+<!-- DSL:hide-lovable-badge -->
+<style id="dsl-hide-badge">
+  lovable-badge,gpt-engineer-badge,
+  [class*='lovable-badge' i],[class*='gpt-engineer' i],
+  [data-lovable-badge],[data-gpt-engineer],
+  [id*='lovable-badge' i],[id*='lovable-edit' i],[id*='gpt-engineer' i],
+  a[href*='lovable.dev/projects' i],
+  a[href*='lovable.dev' i][target='_blank'],
+  a[href*='gptengineer' i],a[href*='gpteng.co' i]{
+    display:none !important;visibility:hidden !important;
+    opacity:0 !important;pointer-events:none !important;
+    width:0 !important;height:0 !important;
+    max-width:0 !important;max-height:0 !important;
+    position:fixed !important;left:-99999px !important;top:-99999px !important;
+    transform:scale(0) !important;clip-path:inset(100%) !important;
+  }
+</style>
+<script>
+(function(){
+  var MARKER='DSL:hide-lovable-badge';
+  var BADGE_TAGS=['lovable-badge','gpt-engineer-badge'];
+  // 1) Bloqueia o registro do custom element ANTES do script da Lovable rodar
+  try{
+    var origDefine=window.customElements&&window.customElements.define;
+    if(origDefine){
+      window.customElements.define=function(name){
+        if(BADGE_TAGS.indexOf((name||'').toLowerCase())>-1)return;
+        return origDefine.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  // 2) Bloqueia scripts da Lovable/gptengineer que injetam o badge
+  try{
+    var origCreate=document.createElement.bind(document);
+    document.createElement=function(tag){
+      var el=origCreate.apply(document,arguments);
+      if((tag||'').toLowerCase()==='script'){
+        try{
+          var setSrc=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
+          Object.defineProperty(el,'src',{
+            set:function(v){
+              if(/lovable\.dev|gptengineer|gpteng\.co/i.test(String(v||''))){return;}
+              setSrc.set.call(this,v);
+            },
+            get:function(){return setSrc.get.call(this);}
+          });
+        }catch(_){}
+      }
+      return el;
+    };
+  }catch(e){}
+  function kill(el){
+    if(!el||el.__dslKilled)return;
+    el.__dslKilled=true;
+    try{el.remove();}catch(e){
+      try{el.style.cssText='display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;position:fixed!important;left:-99999px!important;top:-99999px!important;';}catch(_){}
+    }
+  }
+  function sweep(root){
+    try{
+      root=root||document;
+      var sels=[
+        'lovable-badge','gpt-engineer-badge',
+        '[class*="lovable-badge" i]','[class*="gpt-engineer" i]',
+        '[data-lovable-badge]','[data-gpt-engineer]',
+        '[id*="lovable-badge" i]','[id*="lovable-edit" i]','[id*="gpt-engineer" i]',
+        'a[href*="lovable.dev/projects" i]',
+        'a[href*="lovable.dev" i][target="_blank"]',
+        'a[href*="gptengineer" i]','a[href*="gpteng.co" i]'
+      ];
+      sels.forEach(function(s){
+        try{root.querySelectorAll(s).forEach(kill);}catch(_){}
+      });
+      // Varredura textual + shadow DOM
+      try{
+        root.querySelectorAll('*').forEach(function(el){
+          var t=(el.textContent||'').trim().toLowerCase();
+          if(t==='edit with lovable'||t==='made with lovable'||t==='built with lovable'||t==='powered by lovable'){
+            // sobe pro container clicável
+            var p=el.closest('a,button,div[role="button"]')||el;
+            kill(p);
+          }
+          if(el.shadowRoot)sweep(el.shadowRoot);
+        });
+      }catch(_){}
+    }catch(e){}
+  }
+  sweep(document);
+  var obs=new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes&&m.addedNodes.forEach(function(n){
+        if(n.nodeType===1)sweep(n);
+      });
+    });
+  });
+  try{obs.observe(document.documentElement,{childList:true,subtree:true,attributes:true});}catch(e){}
+  document.addEventListener('DOMContentLoaded',function(){sweep(document);});
+  [100,500,1000,2000,3000,5000,8000].forEach(function(ms){setTimeout(function(){sweep(document);},ms);});
+})();
+</script>
+<!-- DSL:hide-lovable-badge -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
