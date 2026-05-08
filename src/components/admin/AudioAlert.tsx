@@ -38,17 +38,24 @@ export function AudioAlert() {
   }, []);
 
   useEffect(() => {
-    const testAudio = new Audio(AUDIO_SRC);
-    testAudio.volume = 0;
-    testAudio.play()
-      .then(() => {
+    const attemptUnlock = async () => {
+      if (audioState.unlocked) return;
+      
+      const testAudio = new Audio(AUDIO_SRC);
+      testAudio.volume = 0;
+      try {
+        await testAudio.play();
+        // If we reach here, autoplay is allowed or already unlocked
         audioState.unlocked = true;
         setIsUnlocked(true);
         audioState.primedAudio = testAudio;
-      })
-      .catch(() => {
-        console.log("[audio] interaction required");
-      });
+        console.log("[audio] background unlock success");
+      } catch (err) {
+        console.log("[audio] interaction required for unlock");
+      }
+    };
+
+    attemptUnlock();
 
     const handleGlobalInteraction = () => {
       if (!audioState.unlocked) {
@@ -56,10 +63,15 @@ export function AudioAlert() {
       }
     };
 
+    // We keep these to catch the very first click anywhere
     window.addEventListener("click", handleGlobalInteraction, { once: true });
+    window.addEventListener("touchstart", handleGlobalInteraction, { once: true });
+    window.addEventListener("keydown", handleGlobalInteraction, { once: true });
     
     return () => {
       window.removeEventListener("click", handleGlobalInteraction);
+      window.removeEventListener("touchstart", handleGlobalInteraction);
+      window.removeEventListener("keydown", handleGlobalInteraction);
     };
   }, [unlockAudio]);
 
