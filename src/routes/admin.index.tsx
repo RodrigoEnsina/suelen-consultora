@@ -226,7 +226,7 @@ function DashboardPage() {
                   />
                   <div className="relative flex items-start justify-between">
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground/80">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">
                         {c.label}
                       </p>
                       <p className="mt-1 font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
@@ -335,12 +335,12 @@ function DashboardPage() {
                         </span>
                         <span className="tabular-nums font-bold text-muted-foreground/80">{value}</span>
                       </div>
-                      <div className="h-1.5 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
+                      <div className="h-1.5 overflow-hidden rounded-full bg-slate-200/50 ring-1 ring-slate-300/30">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
                           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                          className={`h-full rounded-full bg-gradient-to-r ${col.accent} shadow-[0_0_8px_rgba(0,0,0,0.3)] group-hover:brightness-110 transition-all`}
+                          className={`h-full rounded-full bg-gradient-to-r ${col.accent} shadow-[0_0_10px_rgba(0,0,0,0.15)] group-hover:brightness-110 transition-all`}
                         />
                       </div>
                     </div>
