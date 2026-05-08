@@ -15,25 +15,27 @@ export function AudioAlert() {
 
   const unlockAudio = useCallback(async () => {
     try {
-      if (!audioState.primedAudio) {
-        audioState.primedAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-        audioState.primedAudio.volume = 0; // Silent first play
-      }
+      // Create a fresh audio object to ensure it's not "tainted" by non-gesture creation
+      const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+      audio.volume = 0; // Play silently to unlock
       
-      await audioState.primedAudio.play();
-      audioState.primedAudio.pause();
-      audioState.primedAudio.volume = 0.5;
+      await audio.play();
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 0.5;
       
+      audioState.primedAudio = audio;
       audioState.unlocked = true;
       setIsUnlocked(true);
       setShowPrompt(false);
+      
       toast.success("Alertas sonoros ativados!", {
         description: "Você será avisado sempre que chegar um novo lead.",
         icon: "🔔",
       });
     } catch (err) {
       console.error("[audio] Failed to unlock", err);
-      toast.error("Erro ao ativar som. Clique novamente.");
+      // Don't show toast error here as it might be called automatically via global interaction
     }
   }, []);
 
@@ -54,42 +56,32 @@ export function AudioAlert() {
     checkAutoplay();
 
     // AUTO-UNLOCK on first interaction anywhere
-    const handleGlobalClick = async () => {
+    const handleGlobalInteraction = async () => {
       if (!audioState.unlocked) {
-        try {
-          if (!audioState.primedAudio) {
-            audioState.primedAudio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-          }
-          audioState.primedAudio.volume = 0;
-          await audioState.primedAudio.play();
-          audioState.primedAudio.pause();
-          audioState.primedAudio.volume = 0.5;
-          
-          audioState.unlocked = true;
-          setIsUnlocked(true);
-          console.log("[audio] unlocked via global interaction");
-        } catch (e) {
-          console.warn("[audio] silent unlock failed", e);
-        }
+        unlockAudio();
       }
     };
 
-    window.addEventListener("mousedown", handleGlobalClick, { once: true });
-    window.addEventListener("keydown", handleGlobalClick, { once: true });
+    window.addEventListener("click", handleGlobalInteraction, { once: true });
+    window.addEventListener("keydown", handleGlobalInteraction, { once: true });
     
     return () => {
-      window.removeEventListener("mousedown", handleGlobalClick);
-      window.removeEventListener("keydown", handleGlobalClick);
+      window.removeEventListener("click", handleGlobalInteraction);
+      window.removeEventListener("keydown", handleGlobalInteraction);
     };
   }, []);
 
   return (
     <button
       onClick={() => {
-        if (audioState.primedAudio) {
+        if (isUnlocked && audioState.primedAudio) {
           audioState.primedAudio.currentTime = 0;
           audioState.primedAudio.play().catch(e => {
-            toast.error("Som bloqueado", { description: "Clique na página primeiro" });
+            console.error("[audio] Playback failed", e);
+            // If it failed despite being "unlocked", try unlocking again
+            setIsUnlocked(false);
+            audioState.unlocked = false;
+            unlockAudio();
           });
         } else {
           unlockAudio();
