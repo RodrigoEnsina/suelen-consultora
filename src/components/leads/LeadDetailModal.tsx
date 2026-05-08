@@ -131,6 +131,16 @@ export function LeadDetailModal({ lead, open, onClose, onSaved, onDeleted }: Pro
     onClose();
   };
 
+  const openWhatsApp = () => {
+    const digits = form.whatsapp.replace(/\D/g, "");
+    if (!digits) {
+      toast.error("Número de WhatsApp inválido");
+      return;
+    }
+    const final = digits.startsWith("55") ? digits : `55${digits}`;
+    window.open(`https://wa.me/${final}`, "_blank");
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -316,6 +326,13 @@ export function LeadDetailModal({ lead, open, onClose, onSaved, onDeleted }: Pro
                 Excluir
               </button>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={openWhatsApp}
+                  className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-4 py-2 text-xs font-semibold text-emerald-600 transition-all hover:bg-emerald-500/10 active:scale-95"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  Falar no WhatsApp
+                </button>
                 <button
                   onClick={onClose}
                   className="rounded-full px-4 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"

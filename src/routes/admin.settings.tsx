@@ -20,6 +20,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { audioState } from "@/components/admin/AudioAlert";
 
 export const Route = createFileRoute("/admin/settings")({
   head: () => ({
@@ -120,18 +121,26 @@ function SettingsPage() {
 
   const testNotification = () => {
     try {
-      const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-      audio.volume = 0.5;
-      audio.play().then(() => {
-        toast.success("Som de teste reproduzido!", {
-          description: "Se você ouviu o som, as notificações estão funcionando corretamente.",
-        });
-      }).catch(err => {
-        console.warn("[audio] notification blocked by browser", err);
-        toast.error("Som bloqueado pelo navegador", {
-          description: "Clique em qualquer lugar da página e tente novamente para permitir o áudio.",
-        });
-      });
+      if (audioState.primedAudio) {
+        audioState.primedAudio.currentTime = 0;
+        audioState.primedAudio.play()
+          .then(() => {
+            toast.success("Som de teste reproduzido!", {
+              description: "Se você ouviu o som, as notificações estão funcionando corretamente.",
+            });
+          })
+          .catch(err => {
+            console.warn("[audio] notification blocked by browser", err);
+            toast.error("Som bloqueado pelo navegador", {
+              description: "Clique em qualquer lugar da página e tente novamente.",
+            });
+          });
+      } else {
+        // Fallback for standalone test
+        const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+        audio.volume = 0.5;
+        audio.play().catch(() => toast.error("Som bloqueado pelo navegador"));
+      }
     } catch (err) {
       console.warn("[audio] could not play notification", err);
       toast.error("Erro ao reproduzir som");

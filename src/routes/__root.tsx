@@ -216,12 +216,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = Route.useRouterState({ select: (s) => s.location });
+  const isAdmin = location.pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
       <TrackingProvider />
       <Outlet />
-      <WhatsAppFab />
+      {!isAdmin && <WhatsAppFab />}
     </QueryClientProvider>
   );
 }
