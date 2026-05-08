@@ -19,7 +19,7 @@ export async function verifyLeadPersisted(data: { leadId?: string; whatsapp?: st
   }
 
   try {
-    const { data: result, error } = await supabase.rpc('verify_lead_exists', {
+    const { data: result, error } = await (supabase.rpc as any)('verify_lead_exists', {
       p_lead_id: leadId
     });
 
@@ -28,7 +28,7 @@ export async function verifyLeadPersisted(data: { leadId?: string; whatsapp?: st
       return { exists: false, leadId: null, status: null, createdAt: null };
     }
 
-    const row = result?.[0];
+    const row = (result as any)?.[0];
     if (row && row.exists) {
       return {
         exists: true,
