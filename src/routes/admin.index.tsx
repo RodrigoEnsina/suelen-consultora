@@ -328,12 +328,12 @@ function DashboardPage() {
                   const pct = (value / maxByStatus) * 100;
                   return (
                     <div key={col.id} className="group">
-                      <div className="flex items-center justify-between text-xs mb-1.5">
-                        <span className="inline-flex items-center gap-2 font-semibold text-foreground/90">
+                      <div className="flex items-center justify-between text-[11px] mb-1.5 leading-tight">
+                        <span className="inline-flex items-center gap-2 font-bold tracking-tight text-foreground">
                           <span className={`h-2 w-2 rounded-full bg-gradient-to-br ${col.accent} shadow-sm ring-1 ring-white/10`} />
                           {col.title}
                         </span>
-                        <span className="tabular-nums font-bold text-muted-foreground/80">{value}</span>
+                        <span className="tabular-nums font-extrabold text-foreground/80">{value}</span>
                       </div>
                       <div className="h-1.5 overflow-hidden rounded-full bg-slate-200/50 ring-1 ring-slate-300/30">
                         <motion.div
