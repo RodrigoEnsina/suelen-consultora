@@ -106,8 +106,8 @@ function AdminAnalyticsPage() {
                 return (
                   <div key={s.n}>
                     <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-2">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/80 sm:text-[10px]">Etapa {s.n} · {s.label}</span>
-                      <span className="text-[9px] font-medium tabular-nums text-muted-foreground sm:text-[10px]">{views} entradas · {completes} concluíram ({rate}%)</span>
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-foreground sm:text-[10px]">Etapa {s.n} · {s.label}</span>
+                      <span className="text-[9px] font-semibold tabular-nums text-foreground/90 sm:text-[10px]">{views} entradas · {completes} concluíram ({rate}%)</span>
                     </div>
                     <div className="h-7 overflow-hidden rounded-lg bg-muted">
                       <div className="h-full bg-gradient-brand" style={{ width: `${widthPct}%` }} />
