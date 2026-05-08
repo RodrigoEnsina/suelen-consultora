@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Volume2, VolumeX, BellRing } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 
 // Singleton to share audio state across hooks
 export const audioState = {
@@ -9,76 +8,69 @@ export const audioState = {
   primedAudio: null as HTMLAudioElement | null,
 };
 
+const AUDIO_SRC = "/notification.mp3";
+
 export function AudioAlert() {
   const [isUnlocked, setIsUnlocked] = useState(audioState.unlocked);
-  const [showPrompt, setShowPrompt] = useState(false);
 
   const unlockAudio = useCallback(async () => {
     try {
-      // Create a fresh audio object to ensure it's not "tainted" by non-gesture creation
-      const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
-      audio.volume = 0; // Play silently to unlock
+      if (!audioState.primedAudio) {
+        audioState.primedAudio = new Audio(AUDIO_SRC);
+      }
       
-      await audio.play();
-      audio.pause();
-      audio.currentTime = 0;
-      audio.volume = 0.5;
+      audioState.primedAudio.volume = 0;
+      await audioState.primedAudio.play();
+      audioState.primedAudio.pause();
+      audioState.primedAudio.currentTime = 0;
+      audioState.primedAudio.volume = 0.5;
       
-      audioState.primedAudio = audio;
       audioState.unlocked = true;
       setIsUnlocked(true);
-      setShowPrompt(false);
       
       toast.success("Alertas sonoros ativados!", {
         description: "Você será avisado sempre que chegar um novo lead.",
         icon: "🔔",
       });
     } catch (err) {
-      console.error("[audio] Failed to unlock", err);
-      // Don't show toast error here as it might be called automatically via global interaction
+      console.warn("[audio] Unlock failed", err);
     }
   }, []);
 
   useEffect(() => {
-    // Check if browser allows autoplay
-    const checkAutoplay = async () => {
-      try {
-        const audio = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=");
-        await audio.play();
+    const testAudio = new Audio(AUDIO_SRC);
+    testAudio.volume = 0;
+    testAudio.play()
+      .then(() => {
         audioState.unlocked = true;
         setIsUnlocked(true);
-      } catch (err) {
-        // Expected if no interaction yet
-        console.log("[audio] pending interaction for unlock");
-      }
-    };
+        audioState.primedAudio = testAudio;
+      })
+      .catch(() => {
+        console.log("[audio] interaction required");
+      });
 
-    checkAutoplay();
-
-    // AUTO-UNLOCK on first interaction anywhere
-    const handleGlobalInteraction = async () => {
+    const handleGlobalInteraction = () => {
       if (!audioState.unlocked) {
         unlockAudio();
       }
     };
 
     window.addEventListener("click", handleGlobalInteraction, { once: true });
-    window.addEventListener("keydown", handleGlobalInteraction, { once: true });
     
     return () => {
       window.removeEventListener("click", handleGlobalInteraction);
-      window.removeEventListener("keydown", handleGlobalInteraction);
     };
-  }, []);
+  }, [unlockAudio]);
 
   return (
     <button
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         if (isUnlocked && audioState.primedAudio) {
           audioState.primedAudio.currentTime = 0;
-          audioState.primedAudio.play().catch(e => {
-            console.error("[audio] Playback failed", e);
-            // If it failed despite being "unlocked", try unlocking again
+          audioState.primedAudio.volume = 0.5;
+          audioState.primedAudio.play().catch(() => {
             setIsUnlocked(false);
             audioState.unlocked = false;
             unlockAudio();
@@ -92,7 +84,7 @@ export function AudioAlert() {
           ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20" 
           : "bg-amber-500/10 text-amber-600 hover:bg-amber-500/20"
       }`}
-      title={isUnlocked ? "Sons ativos (clique para testar)" : "Som pendente (clique na página)"}
+      title={isUnlocked ? "Sons ativos (clique para testar)" : "Som bloqueado (clique para ativar)"}
     >
       {isUnlocked ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
     </button>
