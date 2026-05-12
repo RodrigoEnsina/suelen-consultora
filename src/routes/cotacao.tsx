@@ -636,7 +636,7 @@ function CotacaoPage() {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: -20, scale: 0.98 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="glass rounded-3xl p-5 sm:p-10"
+                className="glass relative overflow-hidden rounded-3xl p-5 sm:p-10"
               >
                 <div className="mb-6 sm:mb-8">
                   <div className="flex items-center gap-2 mb-2">
@@ -660,7 +660,7 @@ function CotacaoPage() {
                         </label>
                         <input
                           {...form.register("nome")}
-                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
+                          className="w-full min-w-0 rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="Ex: João Silva"
                         />
                         {form.formState.errors.nome && (
@@ -709,7 +709,7 @@ function CotacaoPage() {
                           <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/40" />
                           <input
                             {...form.register("cidade")}
-                            className="w-full rounded-2xl bg-white p-4 pl-12 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5 sm:pl-12"
+                            className="w-full min-w-0 rounded-2xl bg-white p-4 pl-12 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5 sm:pl-12"
                             placeholder="Sua cidade atual"
                           />
                         </div>
@@ -798,14 +798,14 @@ function CotacaoPage() {
                               key={opt.id}
                               type="button"
                               onClick={() => form.setValue("uso_finalidade", opt.id as any, { shouldValidate: true })}
-                              className={`flex flex-col gap-1 rounded-2xl p-4 text-left transition-all ${
+                              className={`flex w-full min-w-0 flex-col gap-1 rounded-2xl p-4 text-left transition-all ${
                                 form.watch("uso_finalidade") === opt.id
                                   ? "bg-primary/20 ring-2 ring-primary shadow-glow text-foreground"
                                   : "bg-white ring-2 ring-slate-300 hover:bg-slate-50 text-foreground/70"
                               }`}
                             >
-                              <span className="text-sm font-bold">{opt.label}</span>
-                              <span className="text-[10px] opacity-70">{opt.desc}</span>
+                              <span className="block truncate text-sm font-bold">{opt.label}</span>
+                              <span className="block truncate text-[10px] opacity-70">{opt.desc}</span>
                             </button>
                           ))}
                         </div>
@@ -911,7 +911,7 @@ function CotacaoPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="glass rounded-3xl p-10 text-center sm:p-16"
+                className="glass relative overflow-hidden rounded-3xl p-6 text-center sm:p-16"
               >
                 <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 ring-4 ring-emerald-500/5">
                   <BadgeCheck className="h-12 w-12" />
