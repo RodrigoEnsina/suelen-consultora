@@ -660,7 +660,7 @@ function CotacaoPage() {
                         </label>
                         <input
                           {...form.register("nome")}
-                          className="w-full rounded-2xl bg-slate-50 p-4 text-sm text-foreground ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="Ex: João Silva"
                         />
                         {form.formState.errors.nome && (
@@ -676,7 +676,7 @@ function CotacaoPage() {
                         <input
                           {...form.register("email")}
                           type="email"
-                          className="w-full rounded-2xl bg-slate-50 p-4 text-sm text-foreground ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="joao@email.com"
                         />
                         {form.formState.errors.email && (
@@ -692,7 +692,7 @@ function CotacaoPage() {
                         <input
                           {...form.register("whatsapp")}
                           onChange={(e) => form.setValue("whatsapp", maskPhone(e.target.value))}
-                          className="w-full rounded-2xl bg-slate-50 p-4 text-sm text-foreground ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="(11) 99999-9999"
                         />
                         {form.formState.errors.whatsapp && (
@@ -709,7 +709,7 @@ function CotacaoPage() {
                           <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/40" />
                           <input
                             {...form.register("cidade")}
-                            className="w-full rounded-2xl bg-slate-50 p-4 pl-12 text-sm text-foreground ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-primary/40 sm:p-5 sm:pl-12"
+                            className="w-full rounded-2xl bg-white p-4 pl-12 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5 sm:pl-12"
                             placeholder="Sua cidade atual"
                           />
                         </div>
@@ -730,7 +730,7 @@ function CotacaoPage() {
                         </label>
                         <input
                           {...form.register("veiculo_marca")}
-                          className="w-full rounded-2xl bg-slate-50 p-4 text-sm text-foreground ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="Ex: Toyota"
                         />
                         {form.formState.errors.veiculo_marca && (
@@ -745,7 +745,7 @@ function CotacaoPage() {
                         </label>
                         <input
                           {...form.register("veiculo_modelo")}
-                          className="w-full rounded-2xl bg-slate-50 p-4 text-sm text-foreground ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="Ex: Corolla"
                         />
                         {form.formState.errors.veiculo_modelo && (
@@ -761,7 +761,7 @@ function CotacaoPage() {
                         <input
                           {...form.register("veiculo_ano")}
                           maxLength={4}
-                          className="w-full rounded-2xl bg-white/5 p-4 text-sm text-white ring-1 ring-white/10 transition-all focus:bg-white/[0.08] focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="2024"
                         />
                         {form.formState.errors.veiculo_ano && (
@@ -776,7 +776,7 @@ function CotacaoPage() {
                         </label>
                         <input
                           {...form.register("veiculo_fipe")}
-                          className="w-full rounded-2xl bg-white/5 p-4 text-sm text-white ring-1 ring-white/10 transition-all focus:bg-white/[0.08] focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="R$ 0,00"
                         />
                       </div>
@@ -800,8 +800,8 @@ function CotacaoPage() {
                               onClick={() => form.setValue("uso_finalidade", opt.id as any, { shouldValidate: true })}
                               className={`flex flex-col gap-1 rounded-2xl p-4 text-left transition-all ${
                                 form.watch("uso_finalidade") === opt.id
-                                  ? "bg-primary/20 ring-2 ring-primary shadow-glow text-white"
-                                  : "bg-white/5 ring-1 ring-white/10 hover:bg-white/[0.08] text-white/70"
+                                  ? "bg-primary/20 ring-2 ring-primary shadow-glow text-foreground"
+                                  : "bg-white ring-2 ring-slate-300 hover:bg-slate-50 text-foreground/70"
                               }`}
                             >
                               <span className="text-sm font-bold">{opt.label}</span>
@@ -822,7 +822,7 @@ function CotacaoPage() {
                         <input
                           {...form.register("cep")}
                           onChange={(e) => form.setValue("cep", maskCep(e.target.value))}
-                          className="w-full rounded-2xl bg-white/5 p-4 text-sm text-white ring-1 ring-white/10 transition-all focus:bg-white/[0.08] focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="00000-000"
                         />
                         {form.formState.errors.cep && (
@@ -837,7 +837,7 @@ function CotacaoPage() {
                         </label>
                         <input
                           {...form.register("veiculo_placa")}
-                          className="w-full rounded-2xl bg-white/5 p-4 text-sm text-white ring-1 ring-white/10 transition-all focus:bg-white/[0.08] focus:ring-primary/40 sm:p-5"
+                          className="w-full rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="AAA-0A00"
                         />
                       </div>
@@ -853,7 +853,7 @@ function CotacaoPage() {
                         <textarea
                           {...form.register("observacoes")}
                           rows={4}
-                          className="w-full resize-none rounded-2xl bg-white/5 p-4 text-sm text-white ring-1 ring-white/10 transition-all focus:bg-white/[0.08] focus:ring-primary/40 sm:p-5"
+                          className="w-full resize-none rounded-2xl bg-white p-4 text-base font-medium text-foreground ring-2 ring-slate-300 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-primary sm:p-5"
                           placeholder="Conte-nos detalhes ou tire suas dúvidas aqui..."
                         />
                       </div>
@@ -862,7 +862,7 @@ function CotacaoPage() {
                         <div className="flex items-start gap-3">
                           <ShieldCheck className="mt-1 h-5 w-5 shrink-0 text-primary" />
                           <div className="space-y-1">
-                            <p className="text-sm font-bold text-white">Proteção de Dados Garantida</p>
+                            <p className="text-sm font-bold text-foreground">Proteção de Dados Garantida</p>
                             <p className="text-[11px] leading-relaxed text-muted-foreground/80">
                               Seus dados estão protegidos sob nossa política de privacidade. Usamos essas informações apenas para gerar sua tabela personalizada.
                             </p>
