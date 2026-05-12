@@ -636,7 +636,7 @@ function CotacaoPage() {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: -20, scale: 0.98 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="glass relative overflow-hidden rounded-3xl p-5 sm:p-10"
+                className="glass relative overflow-hidden rounded-3xl p-5 sm:p-10 shadow-elevated"
               >
                 <div className="mb-6 sm:mb-8">
                   <div className="flex items-center gap-2 mb-2">
