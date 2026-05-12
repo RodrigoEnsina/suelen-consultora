@@ -977,7 +977,7 @@ function CotacaoPage() {
 
       {/* Floating Urgency Tag */}
       {!done && (
-        <div className="fixed bottom-6 right-6 z-40 hidden sm:block">
+        <div className="fixed bottom-24 right-6 z-40 hidden sm:block">
           <div className="glass flex items-center gap-3 rounded-full py-2.5 pl-3 pr-5 text-xs font-bold shadow-glow ring-1 ring-primary/20">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-500 opacity-75"></span>
@@ -1023,7 +1023,7 @@ function SocialProof() {
           initial={{ opacity: 0, y: 50, x: -20 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          className="fixed bottom-6 left-6 z-[40] hidden max-w-[280px] rounded-2xl border border-border/50 bg-card p-4 shadow-2xl backdrop-blur-xl md:block"
+          className="fixed bottom-6 left-6 z-[40] hidden max-w-[280px] rounded-2xl border border-border/50 bg-card p-4 shadow-2xl backdrop-blur-xl lg:block"
         >
           <div className="flex items-start gap-3">
             <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-white shadow-lg">
