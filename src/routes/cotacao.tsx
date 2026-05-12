@@ -607,7 +607,7 @@ function CotacaoPage() {
                     i <= step ? "opacity-100" : "opacity-30 grayscale"
                   }`}
                 >
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-xl sm:h-10 sm:w-10 sm:rounded-2xl ${
                     i < step 
                       ? "bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]" 
                       : i === step 
