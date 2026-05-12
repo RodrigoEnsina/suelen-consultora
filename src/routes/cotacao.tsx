@@ -579,12 +579,12 @@ function CotacaoPage() {
   const ss = String(seconds % 60).padStart(2, "0");
 
   return (
-    <div className="bg-background aura-bg min-h-screen pb-20 pt-12 sm:pt-20">
+    <div className="bg-background aura-bg min-h-screen pb-20 pt-8 sm:pt-20">
       <div className="container relative mx-auto px-4 sm:px-6">
         {/* Progress Bar */}
         {!done && (
-          <div className="mx-auto mb-8 max-w-2xl sm:mb-12">
-            <div className="flex items-center justify-between px-1 mb-3">
+          <div className="mx-auto mb-6 max-w-2xl sm:mb-12">
+            <div className="flex items-center justify-between px-1 mb-2">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/80">
                 Progresso da Cotação
               </span>
@@ -599,7 +599,7 @@ function CotacaoPage() {
                 className="h-full bg-gradient-brand shadow-[0_0_12px_rgba(155,92,246,0.3)] transition-all duration-500"
               />
             </div>
-            <div className="mt-6 flex justify-between gap-1">
+            <div className="mt-4 flex justify-between gap-1 sm:mt-6">
               {steps.map((s, i) => (
                 <div
                   key={s.id}
@@ -636,14 +636,14 @@ function CotacaoPage() {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: -20, scale: 0.98 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="glass rounded-3xl p-6 sm:p-10"
+                className="glass rounded-3xl p-5 sm:p-10"
               >
-                <div className="mb-8">
+                <div className="mb-6 sm:mb-8">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="flex h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80">Etapa {step + 1}</span>
                   </div>
-                  <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl text-foreground">
+                  <h1 className="text-xl font-extrabold tracking-tight sm:text-3xl text-foreground">
                     {steps[step].title}
                   </h1>
                   <p className="mt-2 text-sm text-foreground/70">
@@ -651,9 +651,9 @@ function CotacaoPage() {
                   </p>
                 </div>
 
-                <form className="space-y-6">
+                <form className="space-y-4 sm:space-y-6">
                   {step === 0 && (
-                    <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                       <div className="space-y-2 sm:col-span-2">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-foreground/70 ml-1">
                           Nome Completo
@@ -723,7 +723,7 @@ function CotacaoPage() {
                   )}
 
                   {step === 1 && (
-                    <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-foreground/70 ml-1">
                           Marca
@@ -784,7 +784,7 @@ function CotacaoPage() {
                   )}
 
                   {step === 2 && (
-                    <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                       <div className="space-y-2 sm:col-span-2">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-foreground/70 ml-1">
                           Finalidade de Uso
@@ -873,7 +873,7 @@ function CotacaoPage() {
                   )}
                 </form>
 
-                <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+                <div className="mt-8 flex flex-col-reverse gap-3 sm:mt-10 sm:flex-row sm:justify-between">
                   {step > 0 && (
                     <button
                       type="button"
